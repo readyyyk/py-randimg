@@ -1,3 +1,4 @@
+from fastapi import Response
 import random
 import drawsvg
 
@@ -20,9 +21,13 @@ def hashmap(seed, w, h):
                 drawsvg.Rectangle(
                     i, j,
                     1, 1,
-                    fill="#000" if random.randint(0, 1) else "#fff")
+                    fill="#000" if random.randint(0, 1) else "#fff"
+                )
             )
 
     res.append_title(f"@{seed}")
 
-    return res.as_svg()
+    return Response(
+        content=res.as_svg(),
+        media_type="image/svg+xml"
+    )

@@ -1,0 +1,15 @@
+# fly.toml app configuration file generated for r-randimg-py on 2023-08-01T17:53:26+03:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "r-randimg-py"
+primary_region = "arn"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]

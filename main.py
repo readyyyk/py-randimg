@@ -1,16 +1,23 @@
-from fastapi import FastAPI, Response, status
+from fastapi import FastAPI, status
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
+from fastapi.middleware.cors import CORSMiddleware
 
-from _consts import PORT, STATUS_BAD_REQUEST
 from hashmap import hashmap
 from picsum import picsum
 from typing import Optional
-import uvicorn
 
 from time import time
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["GET"],
+    allow_headers=["*"],
+)
 
 
 @app.get('/')
@@ -34,10 +41,7 @@ async def _hashmap(seed: Optional[str] = "", w: Optional[int] = 7, h: Optional[N
             status_code=status.HTTP_400_BAD_REQUEST
         )
 
-    return Response(
-        content=hashmap(seed, w, h),
-        media_type="image/svg+xml"
-    )
+    return hashmap(seed, w, h)
 
 
 @app.get('/picsum')
@@ -56,9 +60,4 @@ async def _picsum(seed: Optional[str] = "", w: Optional[int] = 64, h: Optional[N
             status_code=status.HTTP_400_BAD_REQUEST
         )
 
-    res = picsum(seed, w, h)
-    return Response(res["data"], headers={"Content-Type": res["Content-Type"]})
-
-
-if __name__ == "__main__":
-    uvicorn.run(app=app, port=PORT)
+    return picsum(seed, w, h)
